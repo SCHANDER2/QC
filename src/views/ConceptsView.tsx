@@ -116,7 +116,16 @@ export const ConceptsView: React.FC<ConceptsViewProps> = ({ onLoadPresetToSimula
                   </span>
                   {onLoadPresetToSimulator && (
                     <button
-                      onClick={() => onLoadPresetToSimulator('bell_phi_plus')}
+                      onClick={() => {
+                        const targetPreset =
+                          concept.id === 'qubit' ? 'single_one'
+                          : concept.id === 'superposition' || concept.id === 'measurement' ? 'single_plus'
+                          : concept.id === 'quantum_phase' ? 'single_plus_i'
+                          : concept.id === 'teleportation' ? 'teleportation_circuit'
+                          : concept.id === 'superdense_coding' ? 'superdense_coding'
+                          : 'bell_phi_plus';
+                        onLoadPresetToSimulator(targetPreset);
+                      }}
                       className="flex items-center space-x-1 text-xs text-primary-green hover:underline font-semibold"
                     >
                       <Play className="w-3 h-3" />

@@ -83,10 +83,14 @@ export const VisualizationsView: React.FC<VisualizationsViewProps> = ({
                 <div className="flex justify-center my-1 bg-surface rounded py-2 border border-border/40">
                   <BlochSphere3D theta={bv.theta} phi={bv.phi} r={bv.r} size={180} interactive={false} />
                 </div>
-                <div className="mt-2 text-[11px] font-mono text-muted-text grid grid-cols-3 gap-1">
+                <div className="mt-2 text-[11px] font-mono text-muted-text grid grid-cols-3 gap-1 pb-1 border-b border-border/40">
                   <span>x: {bv.x.toFixed(2)}</span>
                   <span>y: {bv.y.toFixed(2)}</span>
                   <span>z: {bv.z.toFixed(2)}</span>
+                </div>
+                <div className="mt-1.5 flex items-center justify-between text-[10px] font-mono text-muted-text px-1">
+                  <span>Purity γ: <strong className="text-dark-text">{bv.purity.toFixed(2)}</strong></span>
+                  <span>Entropy S: <strong className="text-warm-accent">{(bv.entropy ?? 0).toFixed(3)} ebits</strong></span>
                 </div>
               </div>
             ))}

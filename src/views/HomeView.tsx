@@ -97,7 +97,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
             className="text-xs text-primary-green hover:underline font-medium flex items-center space-x-1"
           >
             <BookOpen className="w-3.5 h-3.5" />
-            <span>Browse All 13 Concepts</span>
+            <span>Browse All 15 Concepts</span>
           </button>
         </div>
 
