@@ -71,21 +71,23 @@ describe('Reduced Density Matrix, Partial Trace & Bloch Vectors', () => {
     const b0 = DensityMatrixUtils.getBlochVector(bell, 0);
     const b1 = DensityMatrixUtils.getBlochVector(bell, 1);
 
-    // Both reduced states have x=0, y=0, z=0, r=0, purity=0.5!
+    // Both reduced states have x=0, y=0, z=0, r=0, purity=0.5 and maximal entropy 1.0 ebit!
     expect(b0.x).toBeCloseTo(0.0);
     expect(b0.y).toBeCloseTo(0.0);
     expect(b0.z).toBeCloseTo(0.0);
     expect(b0.r).toBeCloseTo(0.0);
     expect(b0.purity).toBeCloseTo(0.5);
+    expect(b0.entropy).toBeCloseTo(1.0);
 
     expect(b1.x).toBeCloseTo(0.0);
     expect(b1.y).toBeCloseTo(0.0);
     expect(b1.z).toBeCloseTo(0.0);
     expect(b1.r).toBeCloseTo(0.0);
     expect(b1.purity).toBeCloseTo(0.5);
+    expect(b1.entropy).toBeCloseTo(1.0);
   });
 
-  it('keeps product state local Bloch vectors on the unit sphere (r=1)', () => {
+  it('keeps product state local Bloch vectors on the unit sphere (r=1, entropy=0)', () => {
     // |0> on q0, |+> on q1
     let state = QuantumState.zeroState(2);
     state = QuantumEngine.applyOperation(state, { id: 'h1', gate: 'H', targets: [1] });
@@ -93,12 +95,14 @@ describe('Reduced Density Matrix, Partial Trace & Bloch Vectors', () => {
     const b0 = DensityMatrixUtils.getBlochVector(state, 0);
     const b1 = DensityMatrixUtils.getBlochVector(state, 1);
 
-    // q0 is pure |0> -> (0, 0, 1), r = 1
+    // q0 is pure |0> -> (0, 0, 1), r = 1, entropy = 0
     expect(b0.z).toBeCloseTo(1.0);
     expect(b0.r).toBeCloseTo(1.0);
+    expect(b0.entropy).toBeCloseTo(0.0);
 
-    // q1 is pure |+> -> (1, 0, 0), r = 1
+    // q1 is pure |+> -> (1, 0, 0), r = 1, entropy = 0
     expect(b1.x).toBeCloseTo(1.0);
     expect(b1.r).toBeCloseTo(1.0);
+    expect(b1.entropy).toBeCloseTo(0.0);
   });
 });

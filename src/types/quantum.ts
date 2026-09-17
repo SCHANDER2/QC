@@ -83,6 +83,7 @@ export interface BlochVector {
   theta: number; // polar angle [0, pi]
   phi: number; // azimuth angle [0, 2*pi)
   purity: number; // Tr(rho^2) = (1 + r^2)/2
+  entropy?: number; // Von Neumann entanglement entropy in ebits S(rho) = -Tr(rho log2 rho)
 }
 
 export interface DensityMatrix2x2 {

@@ -214,11 +214,15 @@ export const BlochSphereView: React.FC<BlochSphereViewProps> = ({ onNavigateToCo
             r={1.0}
             size={360}
             interactive={true}
+            onAngleChange={(t, p) => {
+              setThetaDeg(Math.round((t * 180) / Math.PI));
+              setPhiDeg(Math.round((p * 180) / Math.PI));
+            }}
           />
 
           <div className="flex items-center space-x-2 text-xs text-muted-text mt-2 select-none">
             <MousePointer className="w-3.5 h-3.5 text-primary-green" />
-            <span>Click and drag to rotate • Scroll to zoom</span>
+            <span>Click sphere to set state • Drag to rotate • Scroll to zoom</span>
           </div>
         </div>
 

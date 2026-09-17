@@ -69,6 +69,20 @@ export class QuantumCircuit {
     return found;
   }
 
+  updateOperation(opId: string, updater: (op: GateOperation) => GateOperation): boolean {
+    let found = false;
+    for (const step of this.steps) {
+      step.operations = step.operations.map(op => {
+        if (op.id === opId) {
+          found = true;
+          return updater(op);
+        }
+        return op;
+      });
+    }
+    return found;
+  }
+
   clear(): void {
     this.steps = [];
   }

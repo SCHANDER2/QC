@@ -16,8 +16,8 @@ export const BlochSphere3D: React.FC<BlochSphereProps> = ({
   theta,
   phi,
   r = 1.0,
-  onAngleChange: _onAngleChange,
-  interactive: _interactive = true,
+  onAngleChange,
+  interactive = true,
   size = 380,
   label,
   purity,
@@ -275,10 +275,14 @@ export const BlochSphere3D: React.FC<BlochSphereProps> = ({
     updateCamera();
 
     const dom = renderer.domElement;
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    let mouseDownPos = { x: 0, y: 0 };
 
     const onMouseDown = (e: MouseEvent) => {
       isDraggingRef.current = true;
       previousMousePosition.current = { x: e.clientX, y: e.clientY };
+      mouseDownPos = { x: e.clientX, y: e.clientY };
     };
 
     const onMouseMove = (e: MouseEvent) => {
@@ -294,8 +298,31 @@ export const BlochSphere3D: React.FC<BlochSphereProps> = ({
       updateCamera();
     };
 
-    const onMouseUp = () => {
+    const onMouseUp = (e: MouseEvent) => {
       isDraggingRef.current = false;
+
+      // Detect click if drag distance is under 5 pixels
+      const dist = Math.hypot(e.clientX - mouseDownPos.x, e.clientY - mouseDownPos.y);
+      if (dist < 5 && onAngleChange && interactive) {
+        const rect = dom.getBoundingClientRect();
+        mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
+
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObject(sphereMesh);
+
+        if (intersects.length > 0) {
+          const pt = intersects[0].point;
+          const len = pt.length();
+          if (len > 0.01) {
+            const nz = Math.max(-1, Math.min(1, pt.z / len));
+            const newTheta = Math.acos(nz);
+            let newPhi = Math.atan2(pt.y, pt.x);
+            if (newPhi < 0) newPhi += 2 * Math.PI;
+            onAngleChange(newTheta, newPhi);
+          }
+        }
+      }
     };
 
     const onWheel = (e: WheelEvent) => {

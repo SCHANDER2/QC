@@ -225,4 +225,68 @@ export const CONCEPTS_DATA: Concept[] = [
       ],
     },
   },
+  {
+    id: 'no_cloning',
+    title: 'The No-Cloning Theorem',
+    category: 'Theorems & Limits',
+    summary: 'It is physically impossible to create an exact duplicate of an unknown quantum state.',
+    plainText:
+      'In classical computation, bits can be cloned effortlessly (copy-paste). In quantum mechanics, the linearity of unitary operations strictly forbids any universal machine or circuit from duplicating an arbitrary, unknown quantum state |ψ⟩. This fundamental theorem guarantees the security of quantum cryptography (such as BB84).',
+    mathExplanation:
+      'Proof by contradiction: Suppose a unitary U exists such that U(|ψ⟩|0⟩) = |ψ⟩|ψ⟩ and U(|φ⟩|0⟩) = |φ⟩|φ⟩. Taking the inner product gives ⟨ψ|φ⟩ = (⟨ψ|φ⟩)², which forces ⟨ψ|φ⟩ to be either 0 or 1. Thus, cloning is only possible if the states are identical or orthogonal, never for arbitrary superpositions.',
+    keyTakeaways: [
+      'Unknown quantum states cannot be duplicated without destroying the original.',
+      'A direct consequence of the linearity and unitarity of quantum mechanics (Wootters & Zurek, 1982).',
+      'Provides the physical security foundation for Quantum Key Distribution (QKD).',
+    ],
+  },
+  {
+    id: 'teleportation',
+    title: 'Quantum Teleportation Protocol',
+    category: 'Core Phenomena',
+    summary: 'Transmitting an unknown qubit state across space using entanglement and 2 classical bits.',
+    plainText:
+      'Quantum teleportation transfers an arbitrary unknown quantum state |ψ⟩ from Alice to Bob. It does not transport physical matter or communicate faster than light; rather, Alice and Bob share an entangled Bell pair, Alice performs a joint Bell-state measurement on her two qubits, and sends the 2-bit classical result to Bob, who applies one of four simple Pauli corrections (I, X, Z, or ZX) to reconstruct |ψ⟩ perfectly.',
+    mathExplanation:
+      'Total 3-qubit state: |ψ⟩_A ⊗ (|00⟩+|11⟩)/√2. Alice applies CNOT(q0, q1) then H(q0). Measuring Alice’s qubits yields outcomes (m0, m1) ∈ {00, 01, 10, 11}. Bob applies Z^{m0} X^{m1} to his qubit, recovering exact state |ψ⟩_B with fidelity 1.0.',
+    keyTakeaways: [
+      'Teleports quantum information without moving the physical particle.',
+      'Consumes 1 ebit of entanglement and requires 2 classical bits of communication.',
+      'The original state at Alice is destroyed by measurement, perfectly obeying the No-Cloning Theorem.',
+    ],
+    interactivePreset: {
+      numQubits: 3,
+      gates: [
+        { id: 'tel_h1', gate: 'H', targets: [1] },
+        { id: 'tel_cx12', gate: 'CX', targets: [2], controls: [1] },
+        { id: 'tel_cx01', gate: 'CX', targets: [1], controls: [0] },
+        { id: 'tel_h0', gate: 'H', targets: [0] },
+      ],
+    },
+  },
+  {
+    id: 'superdense_coding',
+    title: 'Superdense Coding',
+    category: 'Core Phenomena',
+    summary: 'Transmitting 2 classical bits by sending only 1 physical qubit.',
+    plainText:
+      'Superdense coding is the inverse dual of teleportation. By manipulating only her half of an entangled Bell pair with a single Pauli gate (I, X, Z, or ZX), Alice can encode two classical bits of information (00, 01, 10, or 11) into the shared state. When Bob receives her single qubit and performs a Bell measurement on both qubits, he decodes both classical bits simultaneously.',
+    mathExplanation:
+      'Alice applies:\n• 00: I |Φ⁺⟩ = |Φ⁺⟩\n• 01: X |Φ⁺⟩ = |Ψ⁺⟩\n• 10: Z |Φ⁺⟩ = |Φ⁻⟩\n• 11: ZX |Φ⁺⟩ = |Ψ⁻⟩\nBob receives q0, applies CNOT(0, 1) and H(0), and measures both qubits in the computational basis to read out the exact 2-bit message.',
+    keyTakeaways: [
+      'Transfers 2 classical bits using only 1 transmitted physical qubit and prior entanglement.',
+      'Demonstrates that quantum entanglement doubles classical channel communication capacity.',
+      'Experimentally verified with entangled photons and trapped ions.',
+    ],
+    interactivePreset: {
+      numQubits: 2,
+      gates: [
+        { id: 'sd_h0', gate: 'H', targets: [0] },
+        { id: 'sd_cx01', gate: 'CX', targets: [1], controls: [0] },
+        { id: 'sd_x0', gate: 'X', targets: [0] },
+        { id: 'sd_cx', gate: 'CX', targets: [1], controls: [0] },
+        { id: 'sd_h', gate: 'H', targets: [0] },
+      ],
+    },
+  },
 ];

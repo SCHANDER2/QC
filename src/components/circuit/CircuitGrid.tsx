@@ -8,8 +8,10 @@ interface CircuitGridProps {
   steps: CircuitStep[];
   currentStepIndex: number;
   selectedGateType: GateType | null;
+  selectedAngle?: number;
   onAddOperation: (op: GateOperation, stepIndex?: number) => void;
   onRemoveOperation: (opId: string) => void;
+  onUpdateOperation?: (opId: string, updater: (op: GateOperation) => GateOperation) => void;
   onAddQubit: () => void;
   onRemoveQubit: () => void;
   onStepClick: (stepIndex: number) => void;
@@ -20,8 +22,10 @@ export const CircuitGrid: React.FC<CircuitGridProps> = ({
   steps,
   currentStepIndex,
   selectedGateType,
+  selectedAngle = Math.PI / 2,
   onAddOperation,
   onRemoveOperation,
+  onUpdateOperation,
   onAddQubit,
   onRemoveQubit,
   onStepClick,
@@ -45,6 +49,24 @@ export const CircuitGrid: React.FC<CircuitGridProps> = ({
       }
     });
   });
+
+  const handleCycleAngle = (e: React.MouseEvent, op: GateOperation) => {
+    e.stopPropagation();
+    if (!onUpdateOperation || !op.params) return;
+    const current = op.params[0] ?? Math.PI / 2;
+    const standardAngles = [Math.PI / 4, Math.PI / 2, Math.PI, (3 * Math.PI) / 2];
+    let nextAngle = standardAngles[0];
+    for (let i = 0; i < standardAngles.length; i++) {
+      if (Math.abs(current - standardAngles[i]) < 1e-3) {
+        nextAngle = standardAngles[(i + 1) % standardAngles.length];
+        break;
+      }
+    }
+    onUpdateOperation(op.id, prev => ({
+      ...prev,
+      params: [nextAngle],
+    }));
+  };
 
   const handleCellClick = (qIdx: number, sIdx: number) => {
     const existingOp = opGrid[`${qIdx}_${sIdx}`];
@@ -111,7 +133,7 @@ export const CircuitGrid: React.FC<CircuitGridProps> = ({
           id: newId,
           gate: selectedGateType,
           targets: [qIdx],
-          params: def.defaultParams || [Math.PI / 2],
+          params: [selectedAngle],
         },
         sIdx
       );
@@ -281,18 +303,22 @@ export const CircuitGrid: React.FC<CircuitGridProps> = ({
                         ) : (
                           // Standard Gate Box
                           <div
-                            className="w-8 h-8 rounded border border-border bg-surface shadow-sm flex flex-col items-center justify-center hover:border-primary-green hover:shadow transition-all group/gate"
+                            className="w-8 h-8 rounded border border-border bg-surface shadow-sm flex flex-col items-center justify-center hover:border-primary-green hover:shadow transition-all group/gate relative"
                             title={`${op.gate} Gate: Click to remove`}
                           >
                             <span className="font-mono text-xs font-bold text-dark-text">
                               {GATE_DEFINITIONS[op.gate]?.symbol || op.gate}
                             </span>
                             {op.params && (
-                              <span className="text-[9px] text-muted-text -mt-1 font-mono">
+                              <button
+                                onClick={e => handleCycleAngle(e, op)}
+                                className="text-[9px] text-primary-green font-mono px-1 rounded bg-soft-green hover:bg-primary-green hover:text-white transition-colors"
+                                title="Click to cycle rotation angle (45°, 90°, 180°, 270°)"
+                              >
                                 {Math.round((op.params[0] * 180) / Math.PI)}°
-                              </span>
+                              </button>
                             )}
-                            <div className="absolute -top-1.5 -right-1.5 hidden group-hover/gate:flex w-3.5 h-3.5 bg-warm-accent text-white rounded-full items-center justify-center">
+                            <div className="absolute -top-1.5 -right-1.5 hidden group-hover/gate:flex w-3.5 h-3.5 bg-warm-accent text-white rounded-full items-center justify-center shadow">
                               <CloseIcon className="w-2.5 h-2.5" />
                             </div>
                           </div>

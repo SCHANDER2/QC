@@ -89,6 +89,14 @@ export class DensityMatrixUtils {
       }
     }
 
+    // Von Neumann entanglement entropy in ebits S(rho) = -Tr(rho log2 rho)
+    const l1 = (1 + r) / 2;
+    const l2 = (1 - r) / 2;
+    let entropy = 0;
+    if (l1 > EPSILON) entropy -= l1 * Math.log2(l1);
+    if (l2 > EPSILON) entropy -= l2 * Math.log2(l2);
+    entropy = Math.max(0, Math.min(1.0, Math.abs(entropy) < EPSILON ? 0 : entropy));
+
     return {
       qubitIndex: targetQubit,
       x: Math.abs(x) < EPSILON ? 0 : x,
@@ -98,6 +106,7 @@ export class DensityMatrixUtils {
       theta,
       phi,
       purity: Math.abs(purity) < EPSILON ? 0.5 : purity,
+      entropy,
     };
   }
 

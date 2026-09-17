@@ -88,6 +88,7 @@ export const MultiBlochView: React.FC<MultiBlochViewProps> = ({
                 <span>θ = {Math.round((bv.theta * 180) / Math.PI)}°</span>
                 <span>φ = {Math.round((bv.phi * 180) / Math.PI)}°</span>
                 <span>Purity = {(bv.purity * 100).toFixed(1)}%</span>
+                <span className="font-semibold text-primary-green">S = {(bv.entropy ?? 0).toFixed(2)} ebits</span>
               </div>
             </div>
           );

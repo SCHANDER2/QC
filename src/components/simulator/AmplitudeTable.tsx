@@ -94,7 +94,24 @@ export const AmplitudeTable: React.FC<AmplitudeTableProps> = ({
                   {isExplorerMode && (
                     <td className="py-1.5 text-right text-[11px]">
                       {isNonZero ? (
-                        <span className="text-dark-text font-medium">{item.phaseDeg}°</span>
+                        <div className="flex items-center justify-end space-x-1.5" title={`Phase angle: ${item.phaseDeg}°`}>
+                          {/* Mini Phase Clock */}
+                          <svg className="w-4 h-4" viewBox="0 0 16 16">
+                            <title>{`Phase angle: ${item.phaseDeg}°`}</title>
+                            <circle cx="8" cy="8" r="7" fill="#F6F4EE" stroke="#D9D8D0" strokeWidth="1" />
+                            <line
+                              x1="8"
+                              y1="8"
+                              x2={8 + 5.5 * Math.cos(item.phaseRad)}
+                              y2={8 - 5.5 * Math.sin(item.phaseRad)}
+                              stroke="#2F5D50"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                            />
+                            <circle cx="8" cy="8" r="1.5" fill="#2F5D50" />
+                          </svg>
+                          <span className="text-dark-text font-medium w-10">{item.phaseDeg}°</span>
+                        </div>
                       ) : (
                         <span className="text-muted-text/40">—</span>
                       )}
